@@ -1,0 +1,29 @@
+{
+  "name": "workspace-release",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "workspace-version": "bin/workspace-version"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "fast-glob": "^2.0.1",
+    "fs-extra": "^5.0.0",
+    "inquirer": "^5.0.1",
+    "log-symbols": "^2.2.0",
+    "semver": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "keywords": [
+    "release",
+    "version",
+    "travis",
+    "tool"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donaldpipowitch/workspace-release"
+  }
+}
