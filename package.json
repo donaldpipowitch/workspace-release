@@ -2,8 +2,10 @@
   "name": "workspace-release",
   "version": "0.1.0",
   "license": "MIT",
+  "main": "lib/index.js",
   "bin": {
-    "workspace-version": "bin/workspace-version"
+    "workspace-version": "bin/workspace-version",
+    "workspace-publish": "bin/workspace-publish"
   },
   "dependencies": {
     "chalk": "^2.3.0",

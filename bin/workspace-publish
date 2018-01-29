@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+const { red } = require('chalk');
+const { publish } = require('../lib');
+
+publish().catch((err) => {
+  const prefix = red('workspace-publish');
+  console.error(`${prefix} crashed`);
+  console.error(err);
+  process.exitCode = 1;
+});
+
+// allow aborting prompts
+process.on('SIGINT', () => (process.exitCode = 0));
