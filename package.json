@@ -1,13 +1,16 @@
 {
   "name": "workspace-release",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "lib/index.js",
   "bin": {
     "workspace-version": "bin/workspace-version",
     "workspace-publish": "bin/workspace-publish"
   },
-  "files": ["bin", "lib"],
+  "files": [
+    "bin",
+    "lib"
+  ],
   "dependencies": {
     "chalk": "^2.3.0",
     "fast-glob": "^2.0.1",
