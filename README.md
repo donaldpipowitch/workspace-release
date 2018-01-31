@@ -15,3 +15,5 @@ I expect a global environment variable called `NPM_TOKEN` being available for pu
 To change the `registry`, `tag` or `access` use [`publishConfig` in your `package.json`](https://docs.npmjs.com/files/package.json#publishconfig). If `tag` is not set, if will be _automatically_ set to `'next'` for prereleases (versions containing a `'-'`) and to `'latest'` for everything else.
 
 You can look into a [working example here](https://github.com/donaldpipowitch/workspace-release-demo).
+
+Lifecycle events for `$ npm version` and `$ npm publish` are run as usual - but only on Travis' side and _not_ locally. 
