@@ -16,7 +16,6 @@
     "fast-glob": "^2.0.1",
     "fs-extra": "^5.0.0",
     "inquirer": "^5.0.1",
-    "log-symbols": "^2.2.0",
     "semver": "^5.5.0"
   },
   "engines": {

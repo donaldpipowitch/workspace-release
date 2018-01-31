@@ -1,13 +1,7 @@
 #!/usr/bin/env node
-const { red } = require('chalk');
-const { processVersions } = require('../lib');
+const { processVersions, handleError } = require('../lib');
 
-processVersions().catch((err) => {
-  const prefix = red('workspace-version');
-  console.error(`${prefix} crashed`);
-  console.error(err);
-  process.exitCode = 1;
-});
+processVersions().catch(handleError);
 
 // allow aborting prompts
 process.on('SIGINT', () => (process.exitCode = 0));
