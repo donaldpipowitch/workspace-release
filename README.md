@@ -10,4 +10,4 @@ You'd probably want to install this package as a dev depenendency in your worksp
 $ yarn add -D workspace-release -W
 ```
 
-To change the `registry`, `tag` or `access` use [`publishConfig` in your `package.json`](https://docs.npmjs.com/files/package.json#publishconfig). The `tag`
+To change the `registry`, `tag` or `access` use [`publishConfig` in your `package.json`](https://docs.npmjs.com/files/package.json#publishconfig). If `tag` is not set, if will be _automatically_ set to `'next'` for prereleases (versions containing a `'-'`) and to `'latest'` for everything else.
