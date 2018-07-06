@@ -20,4 +20,6 @@ To change the `registry`, `tag` or `access` use [`publishConfig` in your `packag
 
 You can look into a [basic example here](https://github.com/donaldpipowitch/workspace-release-demo) and [a more complex example here](https://github.com/donaldpipowitch/pipo-scripts).
 
-Lifecycle events for `$ npm version` and `$ npm publish` are run as usual - but only on Travis' side and _not_ locally. 
+Lifecycle events for `$ npm version` and `$ npm publish` are run as usual - but only on Travis' side and _not_ locally.
+
+(Note: This project itself is currently released without `workspace-release`. It uses plain old `$ npm version patch && git push && npm publish`.)
