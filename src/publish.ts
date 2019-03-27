@@ -1,10 +1,10 @@
-const { execSync } = require('child_process');
-const { valid } = require('semver');
-const { getRootPackage, getPackageInfos } = require('./packages');
-const { WorkspaceReleaseWarning, WorkspaceReleaseError } = require('./errors');
+import { execSync } from 'child_process';
+import { valid } from 'semver';
+import setNpmAuthTokenForCI from '@hutson/set-npm-auth-token-for-ci';
+import { getRootPackage, getPackageInfos, PackageInfo } from './packages';
+import { WorkspaceReleaseWarning, WorkspaceReleaseError } from './errors';
 
-function getNameVersionPair() {
-  const { TRAVIS_TAG } = process.env;
+function getNameVersionPair(TRAVIS_TAG: string) {
   const isScopedPackage = TRAVIS_TAG[0] === '@';
   if (isScopedPackage) {
     const [name, version] = TRAVIS_TAG.substring(1).split('@');
@@ -14,7 +14,7 @@ function getNameVersionPair() {
   }
 }
 
-function getTag(pkgInfo) {
+function getTag(pkgInfo: PackageInfo) {
   const isPrerelease = pkgInfo.data.version.includes('-');
   if (pkgInfo.data.publishConfig && pkgInfo.data.publishConfig.tag) {
     return `--tag ${pkgInfo.data.publishConfig.tag}`;
@@ -25,7 +25,7 @@ function getTag(pkgInfo) {
   }
 }
 
-function getAccess(pkgInfo) {
+function getAccess(pkgInfo: PackageInfo) {
   if (pkgInfo.data.publishConfig && pkgInfo.data.publishConfig.access) {
     return `--access ${pkgInfo.data.publishConfig.access}`;
   } else {
@@ -33,7 +33,7 @@ function getAccess(pkgInfo) {
   }
 }
 
-async function publish() {
+export async function publish() {
   const { TRAVIS_TAG } = process.env;
   if (!TRAVIS_TAG) {
     throw new WorkspaceReleaseError(
@@ -52,7 +52,7 @@ async function publish() {
     );
   }
 
-  const [name, version] = getNameVersionPair();
+  const [name, version] = getNameVersionPair(TRAVIS_TAG);
   if (!valid(version)) {
     throw new WorkspaceReleaseError(
       `The tagged version "${version}" for the package "${name}" is not a valid SemVer version.`
@@ -80,15 +80,10 @@ async function publish() {
     );
   }
 
-  const options = { cwd: pkgInfo.dir, stdio: 'inherit' };
+  const options = { cwd: pkgInfo.dir, stdio: 'inherit' as 'inherit' };
 
   // set auth token, which should be stored securely in process.env.NPM_TOKEN
-  // damn... I can't use `const { setAuthToken } = require('npm-utils');` directly,
-  // because I need to set cwd properly
-  const setAuthTokenPath = require.resolve(
-    'npm-utils/bin/set-auth-token-var-name.js'
-  );
-  execSync(`node ${setAuthTokenPath}`, options);
+  setNpmAuthTokenForCI();
 
   // triggers normal lifecycle hooks, but we don't need to change anything
   execSync(
@@ -100,5 +95,3 @@ async function publish() {
   const access = getAccess(pkgInfo);
   execSync(`npm publish ${tag} ${access}`, options);
 }
-
-exports.publish = publish;

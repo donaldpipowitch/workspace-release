@@ -1,13 +1,14 @@
-const { join } = require('path');
-const { execSync } = require('child_process');
-const { gray, cyan } = require('chalk');
-const { prompt } = require('inquirer');
-const { valid, inc } = require('semver');
-const { writeFile } = require('fs-extra');
-const { getRootPackage, getPackageInfos } = require('./packages');
-const { WorkspaceReleaseWarning, WorkspaceReleaseError } = require('./errors');
+import { execSync } from 'child_process';
+import chalk from 'chalk';
+import { prompt } from 'inquirer';
+import { valid, inc, ReleaseType } from 'semver';
+import { writeFile } from 'fs-extra';
+import { getRootPackage, getPackageInfos } from './packages';
+import { WorkspaceReleaseWarning, WorkspaceReleaseError } from './errors';
 
-async function processVersions() {
+const { gray, cyan } = chalk;
+
+export async function processVersions() {
   const rootPkg = getRootPackage();
   const pkgInfos = (await getPackageInfos(rootPkg)).filter(
     ({ data }) => !data.private
@@ -44,19 +45,20 @@ async function processVersions() {
     });
 
     if (shouldUpdate) {
+      const releaseTypes: ReleaseType[] = [
+        'prerelease',
+        'prepatch',
+        'preminor',
+        'premajor',
+        'patch',
+        'minor',
+        'major'
+      ];
       const { chosenVersion } = await prompt({
         type: 'list',
         name: 'chosenVersion',
         message: 'What version update do you want to use?',
-        choices: [
-          'prerelease',
-          'prepatch',
-          'preminor',
-          'premajor',
-          'patch',
-          'minor',
-          'major'
-        ].map((release) => {
+        choices: releaseTypes.map((release) => {
           const value = inc(version, release);
           return {
             value,
@@ -84,10 +86,10 @@ async function processVersions() {
     name: 'shouldPush',
     message: `Should I commit and push all changes with tags?
 ${gray(
-      `${changedPkgs
-        .map(({ data: { name, version } }) => `  - ${name}@${version}\n`)
-        .join('')}`
-    )}`,
+  `${changedPkgs
+    .map(({ data: { name, version } }) => `  - ${name}@${version}\n`)
+    .join('')}`
+)}`,
     type: 'confirm',
     default: false
   });
@@ -104,5 +106,3 @@ ${gray(
   execSync('git push');
   execSync('git push --tags');
 }
-
-exports.processVersions = processVersions;

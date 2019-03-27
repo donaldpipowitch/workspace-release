@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { processVersions, handleError } = require('../lib');
+const { processVersions, handleError } = require('../dist');
 
 processVersions().catch(handleError);
 

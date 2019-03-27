@@ -11,6 +11,7 @@ $ yarn add -D workspace-release -W
 ```
 
 This package comes with two scripts:
+
 - `workspace-version`: You call this one locally in your project to set new versions for your packages. Just run `$ yarn workspace-version`.
 - `workspace-publish`: This script will be called by Travis on tag. In simple cases you can just add `if [ -n "$TRAVIS_TAG" ]; then node node_modules/.bin/workspace-publish; fi` in the `scripts` section of your `.travis.yml` for this (see this [example](https://github.com/donaldpipowitch/workspace-release-demo/blob/6edcad43da8b98de4056f7c47ef674e1c0e78651/.travis.yml#L15)). If you have a matrix build (e.g. because you test your package against multiple Node versions) you probably want to create a deploy stage, so that the package will only be deployed, if all tests were successful (see this [example](https://github.com/donaldpipowitch/pipo-scripts/blob/dfd6bb19712425ba4b80812d35c5fe57e3579b4f/.travis.yml#L15)). If you need to build you project before publishing make sure to either do it manually before calling `workspace-publish` or do it in your `preversion` lifecycle for example.
 

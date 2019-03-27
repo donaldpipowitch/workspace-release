@@ -1,8 +1,8 @@
-const { join, dirname } = require('path');
-const fg = require('fast-glob');
-const { WorkspaceReleaseWarning, WorkspaceReleaseError } = require('./errors');
+import { join, dirname } from 'path';
+import globby from 'globby';
+import { WorkspaceReleaseWarning, WorkspaceReleaseError } from './errors';
 
-function getRootPackage() {
+export function getRootPackage() {
   let rootPkg;
   try {
     rootPkg = require(join(process.cwd(), 'package.json'));
@@ -37,8 +37,18 @@ function getRootPackage() {
   return rootPkg;
 }
 
-class PackageInfo {
-  constructor(file) {
+export class PackageInfo {
+  file: string;
+  data: {
+    name: string;
+    version: string;
+    private?: boolean;
+    publishConfig?: { tag?: string; access?: string };
+  };
+  dir: string;
+  wasChanged: boolean;
+
+  constructor(file: string) {
     this.file = file;
     this.data = require(join(process.cwd(), file));
     this.dir = dirname(file);
@@ -46,18 +56,18 @@ class PackageInfo {
   }
 }
 
-async function getPackageInfos({ workspaces }) {
-  const files = await fg(
+export async function getPackageInfos({
+  workspaces
+}: {
+  workspaces: string[];
+}) {
+  const files = await globby(
     workspaces.map((pattern) => join(pattern, 'package.json'))
   );
   const pkgInfos = files
     .map((file) => new PackageInfo(file))
-    .sort(
-      ({ data: a }, { data: b }) =>
-        a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+    .sort(({ data: a }, { data: b }) =>
+      a.name < b.name ? -1 : a.name > b.name ? 1 : 0
     );
   return pkgInfos;
 }
-
-exports.getRootPackage = getRootPackage;
-exports.getPackageInfos = getPackageInfos;

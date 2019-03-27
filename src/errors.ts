@@ -1,21 +1,33 @@
-const { red, yellow } = require('chalk');
+import chalk from 'chalk';
+
+const { red, yellow } = chalk;
 
 const name = 'workspace-publish';
 const errorPrefix = red(name);
 const warningPrefix = yellow(name);
 
-class WorkspaceReleaseError extends Error {
+export class WorkspaceReleaseError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, WorkspaceReleaseError.prototype);
+  }
+
   toString() {
     return this.message;
   }
 }
-class WorkspaceReleaseWarning extends Error {
+export class WorkspaceReleaseWarning extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, WorkspaceReleaseWarning.prototype);
+  }
+
   toString() {
     return this.message;
   }
 }
 
-function handleError(err) {
+export function handleError(err: unknown) {
   if (err instanceof WorkspaceReleaseWarning) {
     console.error(`${warningPrefix} ${err}`);
   } else if (err instanceof WorkspaceReleaseError) {
@@ -27,7 +39,3 @@ function handleError(err) {
     process.exitCode = 1;
   }
 }
-
-exports.WorkspaceReleaseWarning = WorkspaceReleaseWarning;
-exports.WorkspaceReleaseError = WorkspaceReleaseError;
-exports.handleError = handleError;

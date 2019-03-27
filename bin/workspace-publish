@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { publish, handleError } = require('../lib');
+const { publish, handleError } = require('../dist');
 
 publish().catch(handleError);
 
