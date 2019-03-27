@@ -80,12 +80,14 @@ export async function publish() {
     );
   }
 
-  const options = { cwd: pkgInfo.dir, stdio: 'inherit' as 'inherit' };
-
   // set auth token, which should be stored securely in process.env.NPM_TOKEN
+  const currentCwd = process.cwd();
+  process.chdir(pkgInfo.dir);
   setNpmAuthTokenForCI();
+  process.chdir(currentCwd);
 
   // triggers normal lifecycle hooks, but we don't need to change anything
+  const options = { cwd: pkgInfo.dir, stdio: 'inherit' as 'inherit' };
   execSync(
     `npm version --allow-same-version --no-git-tag-version ${version}`,
     options
